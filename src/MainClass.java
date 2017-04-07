@@ -9,7 +9,7 @@ import java.util.Scanner;
  */
 public class MainClass {
 
-    public static final int SIZE = 3;
+    public static final int SIZE = 5;
     public static final int DOT_TO_WINT = 3;
     public static final char EMPTY = '*';
     public static final char ODOT = '0';
@@ -25,11 +25,14 @@ public class MainClass {
         printMap();
         do {
             humanTurn();
+            //aiTurn2();
             printMap();
-            if (winCheck()) break;
+            if (winCheck(XDOT)) break;
+            //if (diagonalCheck(XDOT)) break;
             aiTurn();
             printMap();
-            if (winCheck()) break;
+            if (winCheck(ODOT)) break;
+            //if (diagonalCheck(ODOT)) break;
         } while (!isMapFull());
     }
 
@@ -59,14 +62,14 @@ public class MainClass {
     public static void humanTurn() {
         int x, y;
         System.out.print("Ваш ход. ");
-        System.out.println("[ход № "+turnCount);
+        System.out.println("[ход № " + turnCount);
         do {
             System.out.println("Введите координаты \"X Y\"");
             x = sc.nextInt() - 1;
             y = sc.nextInt() - 1;
             sc.nextLine();
         } while (!isValidDot(x, y));
-        map[x][y]=XDOT;
+        map[x][y] = XDOT;
         turnCount += 1;
     }
 
@@ -76,9 +79,20 @@ public class MainClass {
             x = rand.nextInt(SIZE);
             y = rand.nextInt(SIZE);
         } while (!isValidDot(x, y));
-        System.out.println("Компьютер сходил "+(x+1)+" "+(y+1));
-        map[x][y]=ODOT;
-        turnCount +=1;
+        System.out.println("Компьютер сходил " + (x + 1) + " " + (y + 1));
+        map[x][y] = ODOT;
+        turnCount += 1;
+    }
+
+    public static void aiTurn2() {
+        int x, y;
+        do {
+            x = rand.nextInt(SIZE);
+            y = rand.nextInt(SIZE);
+        } while (!isValidDot(x, y));
+        System.out.println("Компьютер сходил " + (x + 1) + " " + (y + 1));
+        map[x][y] = XDOT;
+        turnCount += 1;
     }
 
     public static boolean isValidDot(int x, int y) {
@@ -90,12 +104,71 @@ public class MainClass {
         return turnCount >= (SIZE * SIZE);
     }
 
-    public static boolean winCheck() {
+    /**
+     * public static boolean winCheck() {
+     * if (isMapFull()) {
+     * System.out.println("Ничья.");
+     * turnCount = SIZE * SIZE;
+     * return true;
+     * }
+     * return false;
+     * }
+     */
+    public static boolean winCheck(char player_dot) {
+        int x = 0;
+        int y = 0;
+        for (int i = 0; i < SIZE; i++, x = 0, y = 0) {
+            for (int j = 0; j < SIZE; j++) {
+                if (map[i][j] == player_dot) {
+                    x++;
+                    if (x == DOT_TO_WINT) {
+                        System.out.println("Победил " + player_dot);
+                        return true;
+                    }
+                } else x = 0;
+                if (map[j][i] == player_dot) {
+                    y++;
+                    if (y == DOT_TO_WINT) {
+                        System.out.println("Победил " + player_dot);
+                        return true;
+                    }
+                } else y = 0;
+            }
+        }
+        if (diagonalCheck(player_dot)) return true;
         if (isMapFull()) {
             System.out.println("Ничья.");
             turnCount = SIZE * SIZE;
             return true;
         }
+        return false;
+    }
+
+    public static boolean diagonalCheck(char player_dot) {
+        int x = 0;
+        int y = 0;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; i < SIZE; j++, i++) {
+                if (map[j][i] == player_dot) {
+                    x++;
+                    if (x == DOT_TO_WINT) {
+                        System.out.println("Победа! Диагональ " + player_dot);
+                        return true;
+                    }
+                } else x = 0;
+
+            }
+            for (int j = 0; i < SIZE; j++, i++) {
+                if (map[i][j] == player_dot) {
+                    y++;
+                    if (y == DOT_TO_WINT) {
+                        System.out.println("Победа! Диагональ " + player_dot);
+                        return true;
+                    }
+                } else y = 0;
+            }
+        }
+
         return false;
     }
 }
