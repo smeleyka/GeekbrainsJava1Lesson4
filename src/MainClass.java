@@ -62,7 +62,7 @@ public class MainClass {
     public static void humanTurn() {
         int x, y;
         System.out.print("Ваш ход. ");
-        System.out.println("[ход № " + turnCount);
+        System.out.println("ход № " + turnCount);
         do {
             System.out.println("Введите координаты \"X Y\"");
             x = sc.nextInt() - 1;
@@ -107,7 +107,7 @@ public class MainClass {
     /**
      * public static boolean winCheck() {
      * if (isMapFull()) {
-     * System.out.println("Ничья.");
+     * System.out.println("Ничья.");л
      * turnCount = SIZE * SIZE;
      * return true;
      * }
@@ -144,31 +144,54 @@ public class MainClass {
         return false;
     }
 
-    public static boolean diagonalCheck(char player_dot) {
+    public static boolean diagonalCheck(char dot) {
         int x = 0;
-        int y = 0;
+        int f;
         for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; i < SIZE; j++, i++) {
-                if (map[j][i] == player_dot) {
+            f = i;
+            x = 0;
+            for (int j = 0; f < SIZE; j++, f++) {
+                if (map[j][f] == dot) {
                     x++;
                     if (x == DOT_TO_WINT) {
-                        System.out.println("Победа! Диагональ " + player_dot);
+                        System.out.println("Победа! Диагональ " + dot);
                         return true;
                     }
                 } else x = 0;
-
             }
-            for (int j = 0; i < SIZE; j++, i++) {
-                if (map[i][j] == player_dot) {
-                    y++;
-                    if (y == DOT_TO_WINT) {
-                        System.out.println("Победа! Диагональ " + player_dot);
+            f = i;
+            x = 0;
+            for (int j = 0; f < SIZE; j++, f++) {
+                if (map[f][j] == dot) {
+                    x++;
+                    if (x == DOT_TO_WINT) {
+                        System.out.println("Победа! Диагональ " + dot);
                         return true;
                     }
-                } else y = 0;
+                } else x = 0;
             }
         }
-
+        for (int i = 0; i < SIZE; i++) {
+            f = i;
+            for (int j = 0; f >= 0; j++, f--) {
+                if (map[j][f] == dot) {
+                    x++;
+                    if (x == DOT_TO_WINT) {
+                        System.out.println("Победа! Диагональ " + dot);
+                        return true;
+                    }
+                } else x = 0;
+            }
+            for (int j = 0; f >= 0; j++, f--) {
+                if (map[f][j] == dot) {
+                    x++;
+                    if (x == DOT_TO_WINT) {
+                        System.out.println("Победа! Диагональ " + dot);
+                        return true;
+                    }
+                } else x = 0;
+            }
+        }
         return false;
     }
 }
